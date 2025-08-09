@@ -1,0 +1,8 @@
+{
+  "name": "Management Pro",
+  "description": "A comprehensive, role-based restaurant management system designed for mobile and tablet use. Features include POS, inventory, staff management, reporting, and more, all navigated with an intuitive swipe interface.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "prompt": ""
+}

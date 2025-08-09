@@ -1,0 +1,12 @@
+import { User, UserRole } from '../../../types.ts';
+
+export const initialUsers: User[] = [
+  { id: '1', name: 'Alex Reyes', username: 'owner', email: 'owner@managementpro.app', role: UserRole.Owner, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: true, basicSalary: 100000, allowances: [{id: 'car', name: 'Car Allowance', amount: 15000, enabled: true}] },
+  { id: '2', name: 'Maria Santos', username: 'manager_maria', email: 'manager@managementpro.app', role: UserRole.Manager, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: false, basicSalary: 60000, allowances: [] },
+  { id: '3', name: 'Juan Dela Cruz', username: 'bar_juan', email: 'bartender@managementpro.app', role: UserRole.Bartender, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: false, basicSalary: 25000, allowances: [{id: 'meal', name: 'Meal', amount: 1500, enabled: true}], department: 'Bar' },
+  { id: '4', name: 'Ana Ignacio', username: 'kitchen_ana', email: 'kitchen@managementpro.app', role: UserRole.Kitchen, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: false, basicSalary: 22000, allowances: [{id: 'meal', name: 'Meal', amount: 1500, enabled: true}], department: 'Kitchen' },
+  { id: '5', name: 'Carlos Mendoza', username: 'waiter_carlos', email: 'waiter@managementpro.app', role: UserRole.Waiter, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: false, basicSalary: 20000, allowances: [{id: 'meal', name: 'Meal', amount: 1500, enabled: true}], department: 'General' },
+  { id: '6', name: 'Jose Rizal', username: 'sec_jose', email: 'security@managementpro.app', role: UserRole.Security, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: false, basicSalary: 18000, allowances: [], department: 'General' },
+  { id: '7', name: 'Dev User', username: 'dev_user', email: 'dev@managementpro.app', role: UserRole.Developer, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: true, basicSalary: 0, allowances: [] },
+  { id: '9', name: 'Helen Reyes', username: 'hr_helen', email: 'hr@managementpro.app', role: UserRole.HR, password: 'password123', pin: '1111', isClockedIn: false, profileComplete: true, faceRegistered: true, basicSalary: 45000, allowances: [], department: 'Admin' },
+];
