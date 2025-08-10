@@ -41,49 +41,54 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     initializeAppData();
 
     try {
-      const storedUsers = localStorage.getItem('users');
-      let loadedUsers: User[];
-      if (storedUsers) {
-        loadedUsers = JSON.parse(storedUsers);
-      } else {
-        // Fallback, though initializeAppData should handle this
-        localStorage.setItem('users', JSON.stringify(initialUsers));
-        loadedUsers = initialUsers;
-      }
-      
-      const ghostUserExists = loadedUsers.some(u => u.role === UserRole.SuperDeveloper);
-      if (!ghostUserExists) {
-        const ghostUser: User = {
-          id: '8', name: atob('QXlhYmU='), 
-          username: atob('QXlhYmUxOTkw'), 
-          email: 'superdev@managementpro.app', 
-          role: UserRole.SuperDeveloper, 
-          password: atob('QXlhYmUxMjM='), 
-          pin: '1111', 
-          isClockedIn: false, 
-          profileComplete: true,
-          faceRegistered: true,
-        };
-        loadedUsers.push(ghostUser);
-        localStorage.setItem('users', JSON.stringify(loadedUsers));
-      }
+      const loadAndPrepareUsers = (): User[] => {
+          const storedUsers = localStorage.getItem('users');
+          let loadedUsers: User[];
 
-      const timeClockEntries: TimeClockEntry[] = JSON.parse(localStorage.getItem('time_clock_entries') || '[]');
-      const breakEntries: TimeClockBreakEntry[] = JSON.parse(localStorage.getItem('time_clock_break_entries') || '[]');
-      
-      const updatedUsers = loadedUsers.map(u => {
-          const openTimeEntry = timeClockEntries.find(entry => entry.userId === u.id && entry.clockOutTime === null);
-          const isClockedIn = !!openTimeEntry;
-          const isOnBreak = isClockedIn ? breakEntries.some(be => be.timeClockEntryId === openTimeEntry.id && be.breakEndTime === null) : false;
-          return { ...u, isClockedIn, isOnBreak };
-      });
-      setUsers(updatedUsers);
+          if (storedUsers) {
+              loadedUsers = JSON.parse(storedUsers);
+          } else {
+              localStorage.setItem('users', JSON.stringify(initialUsers));
+              loadedUsers = initialUsers;
+          }
+
+          const ghostUserExists = loadedUsers.some(u => u.role === UserRole.SuperDeveloper);
+          if (!ghostUserExists) {
+              const ghostUser: User = {
+                  id: '8', name: atob('QXlhYmU='),
+                  username: atob('QXlhYmUxOTkw'),
+                  email: 'superdev@managementpro.app',
+                  role: UserRole.SuperDeveloper,
+                  password: atob('QXlhYmUxMjM='),
+                  pin: '1111',
+                  isClockedIn: false,
+                  profileComplete: true,
+                  faceRegistered: true,
+              };
+              loadedUsers.push(ghostUser);
+              localStorage.setItem('users', JSON.stringify(loadedUsers));
+          }
+
+          const timeClockEntries: TimeClockEntry[] = JSON.parse(localStorage.getItem('time_clock_entries') || '[]');
+          const breakEntries: TimeClockBreakEntry[] = JSON.parse(localStorage.getItem('time_clock_break_entries') || '[]');
+
+          const updatedUsers = loadedUsers.map(u => {
+              const openTimeEntry = timeClockEntries.find(entry => entry.userId === u.id && entry.clockOutTime === null);
+              const isClockedIn = !!openTimeEntry;
+              const isOnBreak = isClockedIn ? breakEntries.some(be => be.timeClockEntryId === openTimeEntry.id && be.breakEndTime === null) : false;
+              return { ...u, isClockedIn, isOnBreak };
+          });
+          return updatedUsers;
+      };
+
+      const preparedUsers = loadAndPrepareUsers();
+      setUsers(preparedUsers);
 
       const settings = JSON.parse(localStorage.getItem('app_settings') || '{}');
       setBusinessStatus(settings.businessStatus || 'Closed');
 
     } catch (error) {
-      console.error("Error managing user data:", error);
+      console.error("Error initializing auth context:", error);
       localStorage.setItem('users', JSON.stringify(initialUsers));
       setUsers(initialUsers);
     }
