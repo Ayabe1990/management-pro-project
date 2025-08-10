@@ -18,6 +18,7 @@ const BatchProductionPage: React.FC = () => {
     const [isRecipeModalOpen, setRecipeModalOpen] = useState(false);
     
     const isManagement = user?.role === UserRole.Owner || user?.role === UserRole.Manager;
+    const canCreateRecipe = isManagement || user?.role === UserRole.Kitchen || user?.role === UserRole.Bartender;
     const initialDept = user?.role === UserRole.Kitchen ? 'Kitchen' : 'Bar';
     const [department, setDepartment] = useState<Department>(initialDept);
 
@@ -106,7 +107,7 @@ const BatchProductionPage: React.FC = () => {
         <div className="h-full">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold font-display">Batch Production</h2>
-                {isManagement && (
+                {canCreateRecipe && (
                     <button onClick={() => setRecipeModalOpen(true)} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2">
                         <PlusCircleIcon className="w-5 h-5"/>
                         Create Recipe
@@ -156,7 +157,7 @@ const BatchProductionPage: React.FC = () => {
                 </form>
             </div>
         </div>
-        {isRecipeModalOpen && isManagement && (
+        {isRecipeModalOpen && canCreateRecipe && (
             <CreateRecipeModal isOpen={isRecipeModalOpen} onClose={() => setRecipeModalOpen(false)} onSave={handleSaveRecipe} inventory={inventory} department={department} />
         )}
         </>
