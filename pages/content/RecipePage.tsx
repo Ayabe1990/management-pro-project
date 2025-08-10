@@ -15,8 +15,8 @@ const RecipeModal: React.FC<{
     inventory: MasterInventoryItem[]; 
     onClose: () => void;
     onSave: (recipe: Recipe) => void;
-    isManager: boolean;
-}> = ({ recipe: initialRecipe, inventory, onClose, onSave, isManager }) => {
+    canSave: boolean;
+}> = ({ recipe: initialRecipe, inventory, onClose, onSave, canSave }) => {
     
     const [recipe, setRecipe] = useState<Partial<Recipe>>({
         ingredients: [],
@@ -109,7 +109,7 @@ const RecipeModal: React.FC<{
                     <button onClick={addInstruction} className="text-sm text-primary mt-2">+ Add Step</button>
                 </div>
             </div>
-            {isManager && <div className="p-4 border-t border-dark-border flex justify-end">
+            {canSave && <div className="p-4 border-t border-dark-border flex justify-end">
                 <button onClick={handleSave} className="bg-success hover:bg-success/80 text-white font-bold py-2 px-6 rounded-lg">Save Recipe</button>
             </div>}
         </div>
@@ -121,7 +121,7 @@ const RecipePage: React.FC = () => {
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | Partial<Recipe> | null>(null);
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [inventory, setInventory] = useState<MasterInventoryItem[]>([]);
-    const isManager = user?.role === UserRole.Owner || user?.role === UserRole.Manager;
+    const canManageRecipes = user?.role === UserRole.Owner || user?.role === UserRole.Manager || user?.role === UserRole.Bartender || user?.role === UserRole.Kitchen;
 
     useEffect(() => {
         const storedRecipes = localStorage.getItem('recipes');
@@ -147,7 +147,7 @@ const RecipePage: React.FC = () => {
         <div className="h-full">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold font-display">Recipe Library</h2>
-                {isManager && <button onClick={() => setSelectedRecipe({})} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2"><PlusCircleIcon className="w-5 h-5"/> New Recipe</button>}
+                {canManageRecipes && <button onClick={() => setSelectedRecipe({})} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2"><PlusCircleIcon className="w-5 h-5"/> New Recipe</button>}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {recipes.map(recipe => (
@@ -158,7 +158,7 @@ const RecipePage: React.FC = () => {
                     </div>
                 ))}
             </div>
-            {selectedRecipe && <RecipeModal recipe={selectedRecipe} inventory={inventory} onClose={() => setSelectedRecipe(null)} onSave={handleSaveRecipe} isManager={isManager} />}
+            {selectedRecipe && <RecipeModal recipe={selectedRecipe} inventory={inventory} onClose={() => setSelectedRecipe(null)} onSave={handleSaveRecipe} canSave={canManageRecipes} />}
         </div>
     );
 };
